@@ -1,0 +1,38 @@
+name: Daily Stock Monitor
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "45 16 * * 1-5"
+      timezone: "Asia/Kolkata"
+
+jobs:
+  run-stock-monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run stock monitor
+        env:
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+          SHEET_GID: ${{ secrets.SHEET_GID }}
+          NEWS_ARTICLES_TO_FETCH: "5"
+          DEEPSEEK_MODEL: "deepseek-v4-flash"
+        run: python stock_monitor.py

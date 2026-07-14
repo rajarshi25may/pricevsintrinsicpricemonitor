@@ -266,7 +266,7 @@ You are analysing an Indian listed stock for a long-term value investor.
 
 Stock: {name}
 Current price: ₹{price}
-User's intrinsic value range: ₹{low} to ₹{high}
+User's intrinsic value range (high to low): ₹{high} to ₹{low}
 
 Investor notes:
 {notes}
@@ -374,7 +374,7 @@ def send_email(alerts, total_stocks_scanned, failed_prices):
             <p>
             <b>Yahoo ticker used:</b> {yahoo_ticker}<br>
             <b>Current price:</b> ₹{alert["price"]:.2f}<br>
-            <b>Your intrinsic value range:</b> ₹{alert["low"]:.2f} - ₹{alert["high"]:.2f}
+            <b>Your intrinsic value range (high to low):</b> ₹{alert["high"]:.2f} - ₹{alert["low"]:.2f}
             </p>
 
             <p>
@@ -394,7 +394,7 @@ def send_email(alerts, total_stocks_scanned, failed_prices):
             """
     else:
         blocks = """
-        <p>No stock in your sheet is currently below your stated lower intrinsic value.</p>
+        <p>No stock in your sheet is currently below your stated higher intrinsic value.</p>
         """
 
     failed_html = ""
@@ -480,14 +480,14 @@ def run_scan():
             continue
 
         log.info(
-            "%s (%s): price %.2f, intrinsic low %.2f",
+            "%s (%s): price %.2f, intrinsic high %.2f",
             name,
             yahoo_ticker,
             price,
-            low,
+            high,
         )
 
-        if price < low:
+        if price < high:
             log.info("Alert triggered for %s", name)
 
             articles = fetch_news(name)

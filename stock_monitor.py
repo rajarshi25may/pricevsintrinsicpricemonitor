@@ -2,7 +2,7 @@
 
 import logging
 import os
-import re
+import rex
 import smtplib
 import sys
 from datetime import datetime
